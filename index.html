@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <h1>Sistema de Gestión Vehicular</h1>
-    
+
     <button id="show-add-form"><i class="fas fa-plus"></i></button>
     <button id="show-search-form"><i class="fas fa-search"></i></button>
     
@@ -37,6 +36,29 @@
         <button type="submit">Editar Fechas</button>
     </form>
 
+    <!-- Tabla -->
+    <h2> Documentos Vehiculos</h2>
+    <table id="vehicle-table" border="1">
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Vencimiento Circulación</th>
+                <th>Vencimiento Rev. Técnica</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="date"></td>
+                <td><input type="date"></td>
+            </tr>
+        </tbody>
+    </table>
+    <button id="add-row"><i class="fas fa-plus"></i></button>
     <script src="render.js"></script>
 </body>
 </html>

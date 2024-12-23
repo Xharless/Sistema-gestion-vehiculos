@@ -23,7 +23,6 @@ app.on('ready', () => {
         mainWindow = null;
     });
 
-    // Open the database
     db = new sqlite3.Database(path.join(__dirname, 'database.sqlite'), (err) => {
         if (err) {
             console.error('Error opening database', err.message);

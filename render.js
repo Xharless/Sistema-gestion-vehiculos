@@ -121,3 +121,22 @@ ipcRenderer.on('delete-vehicle-response', (event, response) => {
         alert('Error al eliminar el vehículo');
     }
 });
+
+// agregar filas
+document.getElementById('add-row').addEventListener('click', function() {
+    var table = document.getElementById('vehicle-table').getElementsByTagName('tbody')[0];
+    var newRow = table.insertRow();
+
+    for (var i = 0; i < 5; i++) {
+        var newCell = newRow.insertCell(i);
+        var input = document.createElement('input');
+        if(i<3){
+            input.type = 'text';
+        } else {
+            input.type = 'date';
+        }
+        
+        newCell.appendChild(input);
+    }
+    
+});
