@@ -52,3 +52,26 @@ ipcMain.on('get-vehicles', (event) => {
     });
 });
 
+ipcMain.on('search-vehicle', (event, { plate }) => {
+    db.get(`SELECT * FROM vehicles WHERE plate = ?`, [plate], (err, row) => {
+        if (err) {
+            console.error('Error searching vehicle', err.message);
+            event.reply('search-vehicle-response', { success: false });
+        } else {
+            event.reply('search-vehicle-response', { success: true, vehicle: row });
+        }
+    });
+});
+
+ipcMain.on('edit-vehicle', (event, vehicle) => {
+    const { plate, dateC, dateV } = vehicle;
+    db.run(`UPDATE vehicles SET dateC = ?, dateV = ? WHERE plate = ?`, [dateC, dateV, plate], function (err) {
+        if (err) {
+            console.error('Error updating vehicle', err.message);
+            event.reply('edit-vehicle-response', { success: false });
+        } else {
+            event.reply('edit-vehicle-response', { success: true });
+        }
+    });
+});
+
