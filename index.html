@@ -8,7 +8,9 @@
 </head>
 <body>
     <h1>Sistema de Gestión Vehicular</h1>
-    <form id="vehicle-form">
+    
+    <button id="show-add-form">+</button>
+    <form id="vehicle-form" style="display: none;">
         <input type="text" id="plate" placeholder="Placa">
         <input type="text" id="brand" placeholder="Marca">
         <input type="text" id="model" placeholder="Modelo">
@@ -16,15 +18,13 @@
         <input type="date" id="dateV" placeholder="Vendicimeto Rev Tecnica">
         <button type="submit">Agregar Vehículo</button>
     </form>
-    <button id="get-vehicles">Obtener Vehículos</button>
-    <ul id="vehicle-list"></ul>
-
     
+
     <h2>Buscar Vehículo por Placa</h2>
     <input type="text" id="search-plate" placeholder="Placa">
     <button id="search-vehicle">Buscar Vehículo</button>
     <ul id="search-results"></ul>
-    
+
     <h2 id="edit-header" style="display: none;">Editar Fechas del Vehículo</h2>
     <form id="edit-form" style="display: none;">
         <input type="hidden" id="edit-plate">
@@ -32,7 +32,7 @@
         <input type="date" id="edit-dateV" placeholder="Nueva Fecha de vencimiento de la revisión técnica" required>
         <button type="submit">Editar Fechas</button>
     </form>
-    
+
     <script src="render.js"></script>
 </body>
 </html>

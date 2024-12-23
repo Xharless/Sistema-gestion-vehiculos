@@ -10,6 +10,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.getElementById('show-add-form').addEventListener('click', () => {
+    const form = document.getElementById('vehicle-form');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+});
+
 document.getElementById('vehicle-form').addEventListener('submit', (event) => {
     event.preventDefault();
     const plate = document.getElementById('plate').value;
@@ -28,23 +33,7 @@ ipcRenderer.on('add-vehicle-response', (event, response) => {
     }
 });
 
-document.getElementById('get-vehicles').addEventListener('click', () => {
-    ipcRenderer.send('get-vehicles');
-});
 
-ipcRenderer.on('get-vehicles-response', (event, response) => {
-    if (response.success) {
-        const vehicleList = document.getElementById('vehicle-list');
-        vehicleList.innerHTML = '';
-        response.vehicles.forEach(vehicle => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `Placa: ${vehicle.plate}, Marca: ${vehicle.brand}, Modelo: ${vehicle.model}, FechaC: ${vehicle.dateC}, FechaV: ${vehicle.dateV}`;
-            vehicleList.appendChild(listItem);
-        });
-    } else {
-        alert('Error al obtener los vehículos');
-    }
-});
 
 document.getElementById('search-vehicle').addEventListener('click', () => {
     const plate = document.getElementById('search-plate').value;
