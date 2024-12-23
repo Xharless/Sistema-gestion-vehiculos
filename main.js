@@ -1,8 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const db = require('./database');
+const sqlite3 = require('sqlite3').verbose();
 
 let mainWindow;
+let db;
 
 app.on('ready', () => {
     mainWindow = new BrowserWindow({
@@ -10,7 +11,7 @@ app.on('ready', () => {
         height: 600,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false, // Asegúrate de que esto esté configurado en false
+            contextIsolation: false,
             webSecurity: false
         },
         icon: path.join(__dirname, 'IMG', 'expediente.png')
@@ -20,6 +21,15 @@ app.on('ready', () => {
 
     mainWindow.on('closed', () => {
         mainWindow = null;
+    });
+
+    // Open the database
+    db = new sqlite3.Database(path.join(__dirname, 'database.sqlite'), (err) => {
+        if (err) {
+            console.error('Error opening database', err.message);
+        } else {
+            console.log('Connected to the database.');
+        }
     });
 });
 
@@ -36,7 +46,7 @@ ipcMain.on('add-vehicle', (event, vehicle) => {
             console.error('Error inserting vehicle', err.message);
             event.reply('add-vehicle-response', { success: false });
         } else {
-            event.reply('add-vehicle-response', { success: true, id: this.lastID });
+            event.reply('add-vehicle-response', { success: true });
         }
     });
 });
@@ -75,3 +85,13 @@ ipcMain.on('edit-vehicle', (event, vehicle) => {
     });
 });
 
+ipcMain.on('delete-vehicle', (event, { plate }) => {
+    db.run(`DELETE FROM vehicles WHERE plate = ?`, [plate], function (err) {
+        if (err) {
+            console.error('Error deleting vehicle', err.message);
+            event.reply('delete-vehicle-response', { success: false });
+        } else {
+            event.reply('delete-vehicle-response', { success: true });
+        }
+    });
+});

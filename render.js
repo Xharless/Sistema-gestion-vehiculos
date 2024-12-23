@@ -33,7 +33,7 @@ document.getElementById('vehicle-form').addEventListener('submit', (event) => {
 
 ipcRenderer.on('add-vehicle-response', (event, response) => {
     if (response.success) {
-        alert('Vehículo agregado correctamente con ID: ' + response.id);
+        alert('Vehículo agregado correctamente');
     } else {
         alert('Error al agregar el vehículo');
     }
@@ -45,15 +45,32 @@ ipcRenderer.on('get-vehicles-response', (event, response) => {
         searchResults.innerHTML = '';
         response.vehicles.forEach(vehicle => {
             const listItem = document.createElement('li');
-            listItem.innerHTML = `Placa: ${vehicle.plate}, Marca: ${vehicle.brand}, Modelo: ${vehicle.model}, FechaC: ${vehicle.dateC}, FechaV: ${vehicle.dateV} <button class="edit-button"><i class="fas fa-edit"></i></button>`;
+            listItem.innerHTML = `
+                Placa: ${vehicle.plate}, Marca: ${vehicle.brand}, Modelo: ${vehicle.model}, FechaC: ${vehicle.dateC}, FechaV: ${vehicle.dateV}
+                <button class="edit-button"><i class="fas fa-edit"></i></button>
+                <button class="delete-button"><i class="fas fa-trash"></i></button>
+            `;
             searchResults.appendChild(listItem);
 
             listItem.querySelector('.edit-button').addEventListener('click', () => {
-                document.getElementById('edit-plate').value = vehicle.plate;
-                document.getElementById('edit-dateC').value = vehicle.dateC;
-                document.getElementById('edit-dateV').value = vehicle.dateV;
-                document.getElementById('edit-header').style.display = 'block';
-                document.getElementById('edit-form').classList.add('show');
+                const editForm = document.getElementById('edit-form');
+                const editHeader = document.getElementById('edit-header');
+                if (editForm.style.display === 'none' || editForm.style.display === '') {
+                    document.getElementById('edit-plate').value = vehicle.plate;
+                    document.getElementById('edit-dateC').value = vehicle.dateC;
+                    document.getElementById('edit-dateV').value = vehicle.dateV;
+                    editHeader.style.display = 'block';
+                    editForm.style.display = 'block';
+                } else {
+                    editHeader.style.display = 'none';
+                    editForm.style.display = 'none';
+                }
+            });
+
+            listItem.querySelector('.delete-button').addEventListener('click', () => {
+                if (confirm(`¿Estás seguro de que deseas eliminar el vehículo con placa ${vehicle.plate}?`)) {
+                    ipcRenderer.send('delete-vehicle', { plate: vehicle.plate });
+                }
             });
         });
     } else {
@@ -93,5 +110,14 @@ ipcRenderer.on('edit-vehicle-response', (event, response) => {
         alert('Fechas del vehículo actualizadas correctamente');
     } else {
         alert('Error al actualizar las fechas del vehículo');
+    }
+});
+
+ipcRenderer.on('delete-vehicle-response', (event, response) => {
+    if (response.success) {
+        alert('Vehículo eliminado correctamente');
+        ipcRenderer.send('get-vehicles'); // Refresh the list
+    } else {
+        alert('Error al eliminar el vehículo');
     }
 });
