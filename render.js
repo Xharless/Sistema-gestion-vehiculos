@@ -15,6 +15,12 @@ document.getElementById('show-add-form').addEventListener('click', () => {
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 });
 
+document.getElementById('show-search-form').addEventListener('click', () => {
+    const searchSection = document.getElementById('search-section');
+    searchSection.style.display = searchSection.style.display === 'none' ? 'block' : 'none';
+    ipcRenderer.send('get-vehicles');
+});
+
 document.getElementById('vehicle-form').addEventListener('submit', (event) => {
     event.preventDefault();
     const plate = document.getElementById('plate').value;
@@ -33,35 +39,44 @@ ipcRenderer.on('add-vehicle-response', (event, response) => {
     }
 });
 
+ipcRenderer.on('get-vehicles-response', (event, response) => {
+    if (response.success) {
+        const searchResults = document.getElementById('search-results');
+        searchResults.innerHTML = '';
+        response.vehicles.forEach(vehicle => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `Placa: ${vehicle.plate}, Marca: ${vehicle.brand}, Modelo: ${vehicle.model}, FechaC: ${vehicle.dateC}, FechaV: ${vehicle.dateV} <button class="edit-button"><i class="fas fa-edit"></i></button>`;
+            searchResults.appendChild(listItem);
 
-
-document.getElementById('search-vehicle').addEventListener('click', () => {
-    const plate = document.getElementById('search-plate').value;
-    ipcRenderer.send('search-vehicle', { plate });
-});
-
-ipcRenderer.on('search-vehicle-response', (event, response) => {
-    const searchResults = document.getElementById('search-results');
-    searchResults.innerHTML = '';
-    if (response.success && response.vehicle) {
-        const vehicle = response.vehicle;
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `Placa: ${vehicle.plate}, Marca: ${vehicle.brand}, Modelo: ${vehicle.model}, FechaC: ${vehicle.dateC}, FechaV: ${vehicle.dateV} <button id="edit-button">✏️</button>`;
-        searchResults.appendChild(listItem);
-
-        // Mostrar el formulario de edición con los datos del vehículo
-        document.getElementById('edit-plate').value = vehicle.plate;
-        document.getElementById('edit-dateC').value = vehicle.dateC;
-        document.getElementById('edit-dateV').value = vehicle.dateV;
-
-        document.getElementById('edit-button').addEventListener('click', () => {
-            document.getElementById('edit-header').style.display = 'block';
-            document.getElementById('edit-form').style.display = 'block';
+            listItem.querySelector('.edit-button').addEventListener('click', () => {
+                document.getElementById('edit-plate').value = vehicle.plate;
+                document.getElementById('edit-dateC').value = vehicle.dateC;
+                document.getElementById('edit-dateV').value = vehicle.dateV;
+                document.getElementById('edit-header').style.display = 'block';
+                document.getElementById('edit-form').classList.add('show');
+            });
         });
     } else {
-        searchResults.textContent = 'Vehículo no encontrado';
-        document.getElementById('edit-header').style.display = 'none';
-        document.getElementById('edit-form').style.display = 'none';
+        alert('Error al obtener los vehículos');
+    }
+});
+
+document.getElementById('search-vehicle').addEventListener('click', () => {
+    ipcRenderer.send('get-vehicles');
+});
+
+document.getElementById('search-plate').addEventListener('input', () => {
+    const plate = document.getElementById('search-plate').value.toLowerCase();
+    const searchResults = document.getElementById('search-results');
+    const items = searchResults.getElementsByTagName('li');
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const text = item.textContent.toLowerCase();
+        if (text.includes(plate)) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
     }
 });
 

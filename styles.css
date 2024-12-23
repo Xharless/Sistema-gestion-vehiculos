@@ -14,8 +14,9 @@ form {
     margin-bottom: 20px;
     padding: 20px;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 2px solid transparent; /* Default border color */
     border-radius: 5px;
+    display: none; /* Hide forms by default */
 }
 
 form input, form button {
@@ -81,4 +82,10 @@ ul li button {
 
 ul li button:hover {
     background-color: #218838;
+}
+
+/* Show forms when buttons are clicked */
+#vehicle-form.show, #search-section.show, #edit-form.show {
+    display: block;
+    border-color: #007bff; /* Blue border */
 }
