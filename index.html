@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGV</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Sistema de Gestión Vehicular</h1>
+    <form id="vehicle-form">
+        <input type="text" id="plate" placeholder="Placa">
+        <input type="text" id="brand" placeholder="Marca">
+        <input type="text" id="model" placeholder="Modelo">
+        <input type="date" id="dateC" placeholder="Vendicimeto Circulacion">
+        <input type="date" id="dateV" placeholder="Vendicimeto Rev Tecnica">
+        <button type="submit"> Agregar Vehículo</button>
+    </form>
+    <button id="get-vehicles"> Obtener Vehículos</button>
+    <ul id="vehicle-list"></ul>
+    <script src="render.js"></script>
+</body>
+</html>
