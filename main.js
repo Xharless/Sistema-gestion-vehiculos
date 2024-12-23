@@ -95,7 +95,7 @@ ipcMain.on('delete-vehicle', (event, { plate }) => {
 
 
 ipcMain.handle('buscar-patente', async (event, plate) => {
-    console.log('Consulta recibida para la matrícula:', plate); // Depuración
+    console.log('Consulta recibida para la matrícula:', plate); 
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM vehicles WHERE plate = ?`;
         db.get(query, [plate], (err, row) => {
@@ -103,13 +103,11 @@ ipcMain.handle('buscar-patente', async (event, plate) => {
                 console.error('Error al realizar la consulta:', err.message);
                 reject(err);
             } else {
-                console.log('Resultado de la consulta:', row); // Depuración
-                resolve(row); // Devuelve el registro encontrado o null
+                resolve(row || null); // Devuelve el registro encontrado o null si no hay resultados
             }
         });
     });
 });
-
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

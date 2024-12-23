@@ -125,20 +125,43 @@ ipcRenderer.on('delete-vehicle-response', (event, response) => {
 // agregar filas
 
 
-async function getVehicles() {
-    const plate = document.getElementById('inputPlate').value.trim();
-    try{
-        const datos = await ipcRenderer.invoke('buscar-patente', plate);
-        if(datos){
-            document.getElementById('columnaBrand').textContent = datos.brand;
-            document.getElementById('columnaModel').textContent = datos.model;
-            document.getElementById('columnaDateC').textContent = datos.dateC;
-            document.getElementById('columnaDateV').textContent = datos.dateV;
-        } else {
-        alert('No se encontraron datos para esta matrícula.');
+document.addEventListener('DOMContentLoaded', () => {
+    const inputPlate = document.getElementById('inputPlate');
+    const btnBuscar = document.getElementById('btnBuscar');
+    const tableBody = document.querySelector('#vehicleTable tbody');
+
+    btnBuscar.addEventListener('click', async () => {
+        const plate = inputPlate.value.trim();
+        console.log('Matrícula ingresada:', plate);
+        if (!plate) {
+            alert('Por favor, ingrese una matrícula válida.');
+            return;
         }
-    } catch (err) {
-        console.error('Error al buscar la matrícula:', err);
-    }
-}
-document.getElementById('btnBuscar').addEventListener('click', getVehicles);
+        try {
+            // Enviar consulta al proceso principal
+            const datos = await ipcRenderer.invoke('buscar-patente', plate);
+            console.log('Datos recibidos:', datos);
+            if (datos) {
+                // Crear una nueva fila con los datos recibidos
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${datos.plate}</td>
+                    <td>${datos.brand}</td>
+                    <td>${datos.model}</td>
+                    <td>${datos.dateC}</td>
+                    <td>${datos.dateV}</td>
+                `;
+                // Agregar la nueva fila al cuerpo de la tabla
+                tableBody.appendChild(newRow);
+                // Limpiar el campo de entrada
+                inputPlate.value = '';
+            } else {
+                alert('No se encontraron datos para esta matrícula.');
+            }
+        } catch (error) {
+            console.error('Error al buscar la matrícula:', error);
+            alert('Hubo un error al buscar la matrícula.');
+        }
+    });
+});
+

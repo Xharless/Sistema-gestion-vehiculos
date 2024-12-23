@@ -40,11 +40,12 @@
     <h2> Documentos Vehiculos</h2>
     <div>
         <input id="inputPlate" type="text" placeholder="Ingrese la matrícula" />
-        <button id="btnBuscar">Buscar</button>
+        <button id="btnBuscar">Ingresar</button>
     </div>
-    <table>
+    <table id="vehicleTable" border="1">
         <thead>
             <tr>
+                <th>Placa</th>
                 <th>Marca</th>
                 <th>Modelo</th>
                 <th>Fecha de creación</th>
@@ -52,12 +53,6 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td id="columnaBrand"></td>
-                <td id="columnaModel"></td>
-                <td id="columnaDateC"></td>
-                <td id="columnaDateV"></td>
-            </tr>
         </tbody>
     </table>
     <script src="render.js"></script>
