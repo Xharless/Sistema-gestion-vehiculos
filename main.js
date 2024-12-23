@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
+
+
 let mainWindow;
 let db;
 
@@ -32,11 +34,7 @@ app.on('ready', () => {
     });
 });
 
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
+
 
 ipcMain.on('add-vehicle', (event, vehicle) => {
     const { plate, brand, model, dateC, dateV } = vehicle;
@@ -93,4 +91,28 @@ ipcMain.on('delete-vehicle', (event, { plate }) => {
             event.reply('delete-vehicle-response', { success: true });
         }
     });
+});
+
+
+ipcMain.handle('buscar-patente', async (event, plate) => {
+    console.log('Consulta recibida para la matrícula:', plate); // Depuración
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM vehicles WHERE plate = ?`;
+        db.get(query, [plate], (err, row) => {
+            if (err) {
+                console.error('Error al realizar la consulta:', err.message);
+                reject(err);
+            } else {
+                console.log('Resultado de la consulta:', row); // Depuración
+                resolve(row); // Devuelve el registro encontrado o null
+            }
+        });
+    });
+});
+
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });

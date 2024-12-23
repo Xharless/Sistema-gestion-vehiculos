@@ -123,20 +123,22 @@ ipcRenderer.on('delete-vehicle-response', (event, response) => {
 });
 
 // agregar filas
-document.getElementById('add-row').addEventListener('click', function() {
-    var table = document.getElementById('vehicle-table').getElementsByTagName('tbody')[0];
-    var newRow = table.insertRow();
 
-    for (var i = 0; i < 5; i++) {
-        var newCell = newRow.insertCell(i);
-        var input = document.createElement('input');
-        if(i<3){
-            input.type = 'text';
+
+async function getVehicles() {
+    const plate = document.getElementById('inputPlate').value.trim();
+    try{
+        const datos = await ipcRenderer.invoke('buscar-patente', plate);
+        if(datos){
+            document.getElementById('columnaBrand').textContent = datos.brand;
+            document.getElementById('columnaModel').textContent = datos.model;
+            document.getElementById('columnaDateC').textContent = datos.dateC;
+            document.getElementById('columnaDateV').textContent = datos.dateV;
         } else {
-            input.type = 'date';
+        alert('No se encontraron datos para esta matrícula.');
         }
-        
-        newCell.appendChild(input);
+    } catch (err) {
+        console.error('Error al buscar la matrícula:', err);
     }
-    
-});
+}
+document.getElementById('btnBuscar').addEventListener('click', getVehicles);
