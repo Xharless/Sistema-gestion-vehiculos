@@ -29,6 +29,8 @@ document.getElementById('vehicle-form').addEventListener('submit', (event) => {
     const dateC = document.getElementById('dateC').value;
     const dateV = document.getElementById('dateV').value;
     ipcRenderer.send('add-vehicle', { plate, brand, model, dateC, dateV });
+    event.target.reset();
+    document.getElementById('plate').focus(); 
 });
 
 ipcRenderer.on('add-vehicle-response', (event, response) => {
@@ -103,6 +105,8 @@ document.getElementById('edit-form').addEventListener('submit', (event) => {
     const dateC = document.getElementById('edit-dateC').value;
     const dateV = document.getElementById('edit-dateV').value;
     ipcRenderer.send('edit-vehicle', { plate, dateC, dateV });
+    event.target.reset();
+    document.getElementById('edit-plate').focus(); 
 });
 
 ipcRenderer.on('edit-vehicle-response', (event, response) => {
@@ -116,7 +120,7 @@ ipcRenderer.on('edit-vehicle-response', (event, response) => {
 ipcRenderer.on('delete-vehicle-response', (event, response) => {
     if (response.success) {
         alert('Vehículo eliminado correctamente');
-        ipcRenderer.send('get-vehicles'); // Refresh the list
+        ipcRenderer.send('get-vehicles'); 
     } else {
         alert('Error al eliminar el vehículo');
     }
@@ -165,3 +169,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+function cargarTablaDesdeBD() {
+    ipcRenderer.send('get-vehicles');
+}
+ipcRenderer.on('get-vehicles-response', (event, response) => {
+    const tableBody = document.querySelector('#vehicleTable tbody');
+    tableBody.innerHTML = ''; // Limpiar el contenido de la tabla
+    if (response.success && response.vehicles.length > 0) {
+        response.vehicles.forEach(vehicle => {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${vehicle.plate}</td>
+                <td>${vehicle.brand}</td>
+                <td>${vehicle.model}</td>
+                <td>${vehicle.dateC}</td>
+                <td>${vehicle.dateV}</td>
+            `;
+            tableBody.appendChild(newRow);
+        });
+    } else {
+        tableBody.innerHTML = '<tr><td colspan="5">No hay datos disponibles</td></tr>';
+    }
+});
+ipcRenderer.on('update-vehicles', () => {
+    cargarTablaDesdeBD();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    cargarTablaDesdeBD();
+});
+
+//------------------------------    INICIO    ----------------------------------//
+// RELOAD
+document.getElementById('force-reload').addEventListener('click', () => {
+    ipcRenderer.send('force-reload');
+});
+
+ipcMain.on('force-reload', () => {
+    if (mainWindow) {
+        mainWindow.minimize();  // Minimiza la ventana temporalmente
+        mainWindow.webContents.reloadIgnoringCache();
+
+        // Después de recargar, restauramos la ventana
+        mainWindow.webContents.once('did-finish-load', () => {
+            mainWindow.restore();
+            mainWindow.focus();  // Asegurarse de que la ventana recupere el foco
+        });
+    }
+});
+//------------------------------    FIN    ----------------------------------//

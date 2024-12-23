@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-
+    <button id="force-reload"><i class="fas fa-sync-alt"></i></button>
     <button id="show-add-form"><i class="fas fa-plus"></i></button>
     <button id="show-search-form"><i class="fas fa-search"></i></button>
+
     
     <form id="vehicle-form" style="display: none;">
         <input type="text" id="plate" placeholder="Placa">
@@ -38,10 +39,7 @@
 
     <!-- Tabla -->
     <h2> Documentos Vehiculos</h2>
-    <div>
-        <input id="inputPlate" type="text" placeholder="Ingrese la matrícula" />
-        <button id="btnBuscar">Ingresar</button>
-    </div>
+    
     <table id="vehicleTable" border="1">
         <thead>
             <tr>

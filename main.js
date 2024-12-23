@@ -44,28 +44,7 @@ ipcMain.on('add-vehicle', (event, vehicle) => {
             event.reply('add-vehicle-response', { success: false });
         } else {
             event.reply('add-vehicle-response', { success: true });
-        }
-    });
-});
-
-ipcMain.on('get-vehicles', (event) => {
-    db.all(`SELECT * FROM vehicles`, [], (err, rows) => {
-        if (err) {
-            console.error('Error fetching vehicles', err.message);
-            event.reply('get-vehicles-response', { success: false, vehicles: [] });
-        } else {
-            event.reply('get-vehicles-response', { success: true, vehicles: rows });
-        }
-    });
-});
-
-ipcMain.on('search-vehicle', (event, { plate }) => {
-    db.get(`SELECT * FROM vehicles WHERE plate = ?`, [plate], (err, row) => {
-        if (err) {
-            console.error('Error searching vehicle', err.message);
-            event.reply('search-vehicle-response', { success: false });
-        } else {
-            event.reply('search-vehicle-response', { success: true, vehicle: row });
+            mainWindow.webContents.send('update-vehicles');
         }
     });
 });
@@ -78,6 +57,8 @@ ipcMain.on('edit-vehicle', (event, vehicle) => {
             event.reply('edit-vehicle-response', { success: false });
         } else {
             event.reply('edit-vehicle-response', { success: true });
+            mainWindow.webContents.send('update-vehicles');
+            
         }
     });
 });
@@ -89,9 +70,39 @@ ipcMain.on('delete-vehicle', (event, { plate }) => {
             event.reply('delete-vehicle-response', { success: false });
         } else {
             event.reply('delete-vehicle-response', { success: true });
+            mainWindow.webContents.send('update-vehicles');
+            
         }
     });
 });
+
+ipcMain.on('get-vehicles', (event) => {
+    db.all(`SELECT * FROM vehicles`, [], (err, rows) => {
+        if (err) {
+            console.error('Error fetching vehicles', err.message);
+            event.reply('get-vehicles-response', { success: false, vehicles: [] });
+        } else {
+            event.reply('get-vehicles-response', { success: true, vehicles: rows });
+            
+        }
+    });
+});
+
+ipcMain.on('search-vehicle', (event, { plate }) => {
+    db.get(`SELECT * FROM vehicles WHERE plate = ?`, [plate], (err, row) => {
+        if (err) {
+            console.error('Error searching vehicle', err.message);
+            event.reply('search-vehicle-response', { success: false });
+        } else {
+            event.reply('search-vehicle-response', { success: true, vehicle: row });
+            event.target.reset();
+            document.getElementById('plate').focus();
+        }
+        
+    });
+});
+
+
 
 
 ipcMain.handle('buscar-patente', async (event, plate) => {
@@ -108,6 +119,7 @@ ipcMain.handle('buscar-patente', async (event, plate) => {
         });
     });
 });
+
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
