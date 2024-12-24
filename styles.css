@@ -55,13 +55,15 @@ form button {
     cursor: pointer;
 }
 
+
+
 form button:hover {
     background-color: #0056b3;
 }
 
 /* Table styles */
 table {
-    width: 85%;
+    width: 80%;
     border-collapse: separate;
     border-spacing: 0;
     margin-bottom: 20px;
@@ -99,10 +101,18 @@ table tr:hover {
     color: #d32f2f; /* Rojo oscuro para mayor contraste */
     font-weight: bold;
 }
+.edit-button,
+.delete-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #007bff;
+}
 
 /* Button styles */
 button {
-   
+    
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -164,4 +174,8 @@ button.delete-button:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     width: 400px;
     text-align: center;
+}
+
+button i {
+    font-size: 18px; /* Tamaño del ícono */
 }

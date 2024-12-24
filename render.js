@@ -8,6 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
     for (const type of ['chrome', 'node', 'electron']) {
         replaceText(`${type}-version`, process.versions[type]);
     }
+    cargarTablaDesdeBD()
 });
 
 document.getElementById('show-add-form').addEventListener('click', () => {
@@ -20,11 +21,7 @@ document.getElementById('close-form').addEventListener('click', () => {
     overlayForm.style.display = 'none'; // Oculta la superposición
 });
 
-document.getElementById('show-search-form').addEventListener('click', () => {
-    const searchSection = document.getElementById('search-section');
-    searchSection.style.display = searchSection.style.display === 'none' ? 'block' : 'none';
-    ipcRenderer.send('get-vehicles');
-});
+
 
 document.getElementById('vehicle-form').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -46,47 +43,7 @@ ipcRenderer.on('add-vehicle-response', (event, response) => {
     }
 });
 
-ipcRenderer.on('get-vehicles-response', (event, response) => {
-    if (response.success) {
-        const searchResults = document.getElementById('search-results');
-        searchResults.innerHTML = '';
-        response.vehicles.forEach(vehicle => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `
-                Placa: ${vehicle.plate}, Marca: ${vehicle.brand}, Modelo: ${vehicle.model}, Per. Circulación: ${formatDate(vehicle.dateC)}, Rev. Tecnica: ${formatDate(vehicle.dateV)}
-                
 
-
-                <button class="edit-button"><i class="fas fa-edit"></i></button>
-                <button class="delete-button"><i class="fas fa-trash"></i></button>
-            `;
-            searchResults.appendChild(listItem);
-
-            listItem.querySelector('.edit-button').addEventListener('click', () => {
-                const editForm = document.getElementById('edit-form');
-                const editHeader = document.getElementById('edit-header');
-                if (editForm.style.display === 'none' || editForm.style.display === '') {
-                    document.getElementById('edit-plate').value = vehicle.plate;
-                    document.getElementById('edit-dateC').value = vehicle.dateC;
-                    document.getElementById('edit-dateV').value = vehicle.dateV;
-                    editHeader.style.display = 'block';
-                    editForm.style.display = 'block';
-                } else {
-                    editHeader.style.display = 'none';
-                    editForm.style.display = 'none';
-                }
-            });
-
-            listItem.querySelector('.delete-button').addEventListener('click', () => {
-                if (confirm(`¿Estás seguro de que deseas eliminar el vehículo con placa ${vehicle.plate}?`)) {
-                    ipcRenderer.send('delete-vehicle', { plate: vehicle.plate });
-                }
-            });
-        });
-    } else {
-        alert('Error al obtener los vehículos');
-    }
-});
 
 document.getElementById('search-vehicle').addEventListener('click', () => {
     ipcRenderer.send('get-vehicles');
@@ -154,8 +111,26 @@ ipcRenderer.on('get-vehicles-response', (event, response) => {
                 <td>${vehicle.model}</td>
                 <td class="${dateCClass}">${dateCFormatted}</td>
                 <td class="${dateVClass}">${dateVFormatted}</td>
+                <td>
+                    <button class="edit-button"><i class="fas fa-edit"></i></button> 
+                    <button class="delete-button"><i class="fas fa-trash"></i></button>
+                </td>
             `;
             tableBody.appendChild(newRow);
+            newRow.querySelector('.edit-button').addEventListener('click', () => {
+                // Puedes abrir el formulario de edición o modificar directamente la fila
+                const editForm = document.getElementById('edit-form');
+                document.getElementById('edit-plate').value = vehicle.plate;
+                document.getElementById('edit-dateC').value = vehicle.dateC;
+                document.getElementById('edit-dateV').value = vehicle.dateV;
+                document.getElementById('edit-header').style.display = 'block';
+                editForm.style.display = 'block';
+            });
+            newRow.querySelector('.delete-button').addEventListener('click', () => {
+                if (confirm(`¿Estás seguro de que deseas eliminar el vehículo con placa ${vehicle.plate}?`)) {
+                    ipcRenderer.send('delete-vehicle', { plate: vehicle.plate });
+                }
+            });
         });
     } else {
         tableBody.innerHTML = '<tr><td colspan="5">No hay datos disponibles</td></tr>';
@@ -202,4 +177,33 @@ function isDateWithin30Days(dateString) {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays <= 30 && diffDays >= 0;
 }
+// -----------------------------    FIN    ----------------------------- //
+// -----------------------------    INICIO    ----------------------------- //
+// escape para los botones de edicion de fechas
+const editButtons = document.querySelectorAll('.edit-button');
+const editForm = document.getElementById('edit-form');
+const editHeader = document.getElementById('edit-header');
+editButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Alternar la visibilidad del formulario de edición
+        if (editForm.style.display === 'block') {
+            // Si el formulario ya está visible, ocultarlo
+            editForm.style.display = 'none';
+            editHeader.style.display = 'none';
+        } else {
+            // Si el formulario está oculto, mostrarlo
+            editForm.style.display = 'block';
+            editHeader.style.display = 'block';
+        }
+    });
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        // Si la tecla "Esc" es presionada, ocultar el formulario de edición
+        editForm.style.display = 'none';
+        editHeader.style.display = 'none';
+    }
+});
+
 // -----------------------------    FIN    ----------------------------- //
