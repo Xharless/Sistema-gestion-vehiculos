@@ -183,10 +183,20 @@ function isDateWithin30Days(dateString) {
 const editButtons = document.querySelectorAll('.edit-button');
 const editForm = document.getElementById('edit-form');
 const editHeader = document.getElementById('edit-header');
+const closeButton = document.getElementById('close-form');
+if (closeButton) {
+    closeButton.addEventListener('click', () => {
+        editForm.style.display = 'none';
+        editHeader.style.display = 'none';
+    });
+}
+
 editButtons.forEach(button => {
     button.addEventListener('click', () => {
-        // Alternar la visibilidad del formulario de edición
-        if (editForm.style.display === 'block') {
+        // Comprobar el estilo de visibilidad del formulario de edición
+        const isFormVisible = window.getComputedStyle(editForm).display === 'block';
+
+        if (isFormVisible) {
             // Si el formulario ya está visible, ocultarlo
             editForm.style.display = 'none';
             editHeader.style.display = 'none';
@@ -198,12 +208,11 @@ editButtons.forEach(button => {
     });
 });
 
+// Cerrar el formulario con la tecla "Esc"
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
-        // Si la tecla "Esc" es presionada, ocultar el formulario de edición
         editForm.style.display = 'none';
         editHeader.style.display = 'none';
     }
 });
-
 // -----------------------------    FIN    ----------------------------- //

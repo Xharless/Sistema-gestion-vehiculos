@@ -32,6 +32,7 @@ h2 {
 }
 
 /* Form styles */
+
 form {
     background-color: #e3f2fd; /* Azul claro para contrastar con el fondo */
     padding: 20px;
@@ -39,10 +40,18 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
+#edit-form, .edit-form {
+    background-color: #e3f2fd; /* Azul claro para contrastar con el fondo */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 250px;
+}
 
 form input, form button {
     display: block;
-    width: 100%;
+    width: 90%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;

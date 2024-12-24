@@ -9,11 +9,6 @@
 </head>
 <body>
     
-
-    
-    
-    
-    
     <div id="search-section" style="display: none;">
         <h2>Buscar Vehículo por Placa</h2>
         <input type="text" id="search-plate" placeholder="Placa">
@@ -21,13 +16,7 @@
         <ul id="search-results"></ul>
     </div>
 
-    <h2 id="edit-header" style="display: none;">Editar Fechas del Vehículo</h2>
-    <form id="edit-form" style="display: none;">
-        <input type="hidden" id="edit-plate">
-        <input type="date" id="edit-dateC" placeholder="Nueva Fecha de vencimiento de la tarjeta de circulación" required>
-        <input type="month" id="edit-dateV" placeholder="Nueva Fecha de vencimiento de la revisión técnica" required>
-        <button type="submit">Editar Fechas</button>
-    </form>
+    
 
     <!-- Tabla -->
     <div class="container">
@@ -57,7 +46,7 @@
     <div id="overlay-form" class="overlay">
         <div class="form-container">
             <h2>Agregar Vehículo</h2>
-            <form id="vehicle-form">
+            <form id="vehicle-form" class="add-form">
                 <input type="text" id="plate" placeholder="Placa" required>
                 <input type="text" id="brand" placeholder="Marca" required>
                 <input type="text" id="model" placeholder="Modelo" required>
@@ -68,6 +57,14 @@
             </form>
         </div>
     </div>
+
+    <h2 id="edit-header" style="display: none;"></h2>
+    <form id="edit-form" class="edit-form" style="display: none;">
+        <input type="hidden" id="edit-plate">
+        <input type="date" id="edit-dateC" placeholder="Nueva Fecha de vencimiento de la tarjeta de circulación" required>
+        <input type="month" id="edit-dateV" placeholder="Nueva Fecha de vencimiento de la revisión técnica" required>
+        <button type="submit">Editar Fechas</button>
+    </form>
     
     <script src="render.js"></script>
 </body>
