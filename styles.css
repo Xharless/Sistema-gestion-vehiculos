@@ -1,7 +1,7 @@
 /* General styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f8ff; /* Cambiado para combinar mejor con el fondo */
+    background-color: #ffffff; /* Cambiado para combinar mejor con el fondo */
     margin: 0;
     padding: 20px;
     
@@ -34,14 +34,14 @@ h2 {
 /* Form styles */
 
 form {
-    background-color: #e3f2fd; /* Azul claro para contrastar con el fondo */
+    background-color: #ffffff; /* Azul claro para contrastar con el fondo */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
 #edit-form, .edit-form {
-    background-color: #e3f2fd; /* Azul claro para contrastar con el fondo */
+    background-color: #ffffff; /* Azul claro para contrastar con el fondo */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -177,7 +177,7 @@ button.delete-button:hover {
 }
 
 .form-container {
-    background-color: #e3f2fd; /* Azul claro consistente con el diseño */
+    background-color: #ffffff; /* Azul claro consistente con el diseño */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
