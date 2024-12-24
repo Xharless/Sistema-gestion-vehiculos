@@ -20,13 +20,11 @@ document.getElementById('close-form').addEventListener('click', () => {
     overlayForm.style.display = 'none'; // Oculta la superposición
 });
 
-
 document.getElementById('show-search-form').addEventListener('click', () => {
     const searchSection = document.getElementById('search-section');
     searchSection.style.display = searchSection.style.display === 'none' ? 'block' : 'none';
     ipcRenderer.send('get-vehicles');
 });
-
 
 document.getElementById('vehicle-form').addEventListener('submit', (event) => {
     event.preventDefault();
