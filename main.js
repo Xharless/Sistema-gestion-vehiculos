@@ -119,7 +119,18 @@ ipcMain.handle('buscar-patente', async (event, plate) => {
         });
     });
 });
+ipcMain.on('force-reload', () => {
+    if (mainWindow) {
+        mainWindow.minimize();  // Minimiza la ventana temporalmente
+        mainWindow.webContents.reloadIgnoringCache();
 
+        // Después de recargar, restauramos la ventana
+        mainWindow.webContents.once('did-finish-load', () => {
+            mainWindow.restore();
+            mainWindow.focus();  // Asegurarse de que la ventana recupere el foco
+        });
+    }
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

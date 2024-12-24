@@ -8,19 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <button id="force-reload"><i class="fas fa-sync-alt"></i></button>
-    <button id="show-add-form"><i class="fas fa-plus"></i></button>
-    <button id="show-search-form"><i class="fas fa-search"></i></button>
+    
 
     
-    <form id="vehicle-form" style="display: none;">
-        <input type="text" id="plate" placeholder="Placa">
-        <input type="text" id="brand" placeholder="Marca">
-        <input type="text" id="model" placeholder="Modelo">
-        <input type="date" id="dateC" placeholder="Vendicimeto Circulacion">
-        <input type="date" id="dateV" placeholder="Vendicimeto Rev Tecnica">
-        <button type="submit">Agregar Vehículo</button>
-    </form>
+    
+    
     
     <div id="search-section" style="display: none;">
         <h2>Buscar Vehículo por Placa</h2>
@@ -33,26 +25,51 @@
     <form id="edit-form" style="display: none;">
         <input type="hidden" id="edit-plate">
         <input type="date" id="edit-dateC" placeholder="Nueva Fecha de vencimiento de la tarjeta de circulación" required>
-        <input type="date" id="edit-dateV" placeholder="Nueva Fecha de vencimiento de la revisión técnica" required>
+        <input type="month" id="edit-dateV" placeholder="Nueva Fecha de vencimiento de la revisión técnica" required>
         <button type="submit">Editar Fechas</button>
     </form>
 
     <!-- Tabla -->
-    <h2> Documentos Vehiculos</h2>
+    <div class="container">
+        <div class="table-container">
+            <div class="buttons-container">
+                <button id="force-reload"><i class="fas fa-sync-alt"></i></button>
+                <button id="show-add-form"><i class="fas fa-plus"></i></button>
+                <button id="show-search-form"><i class="fas fa-search"></i></button>
+            </div>
+            <h2> Documentos Vehículos</h2>
+            <table id="vehicleTable" border="5">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>V. Permiso Circulación</th>
+                        <th>V. Revisión Técnica</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
     
-    <table id="vehicleTable" border="1">
-        <thead>
-            <tr>
-                <th>Placa</th>
-                <th>Marca</th>
-                <th>Modelo</th>
-                <th>Fecha de creación</th>
-                <th>Fecha de vencimiento</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+
+    <div id="overlay-form" class="overlay">
+        <div class="form-container">
+            <h2>Agregar Vehículo</h2>
+            <form id="vehicle-form">
+                <input type="text" id="plate" placeholder="Placa" required>
+                <input type="text" id="brand" placeholder="Marca" required>
+                <input type="text" id="model" placeholder="Modelo" required>
+                <input type="date" id="dateC" placeholder="Fecha de vencimiento de la tarjeta de circulación" required>
+                <input type="month" id="dateV" placeholder="Fecha de vencimiento de la revisión técnica" required>
+                <button type="submit">Agregar Vehículo</button>
+                <button type="button" id="close-form">Cerrar</button>
+            </form>
+        </div>
+    </div>
+    
     <script src="render.js"></script>
 </body>
 </html>

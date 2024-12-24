@@ -11,15 +11,22 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById('show-add-form').addEventListener('click', () => {
-    const form = document.getElementById('vehicle-form');
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    const overlayForm = document.getElementById('overlay-form');
+    overlayForm.style.display = 'flex'; // Muestra la superposición
 });
+
+document.getElementById('close-form').addEventListener('click', () => {
+    const overlayForm = document.getElementById('overlay-form');
+    overlayForm.style.display = 'none'; // Oculta la superposición
+});
+
 
 document.getElementById('show-search-form').addEventListener('click', () => {
     const searchSection = document.getElementById('search-section');
     searchSection.style.display = searchSection.style.display === 'none' ? 'block' : 'none';
     ipcRenderer.send('get-vehicles');
 });
+
 
 document.getElementById('vehicle-form').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -48,7 +55,10 @@ ipcRenderer.on('get-vehicles-response', (event, response) => {
         response.vehicles.forEach(vehicle => {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
-                Placa: ${vehicle.plate}, Marca: ${vehicle.brand}, Modelo: ${vehicle.model}, FechaC: ${vehicle.dateC}, FechaV: ${vehicle.dateV}
+                Placa: ${vehicle.plate}, Marca: ${vehicle.brand}, Modelo: ${vehicle.model}, Per. Circulación: ${formatDate(vehicle.dateC)}, Rev. Tecnica: ${formatDate(vehicle.dateV)}
+                
+
+
                 <button class="edit-button"><i class="fas fa-edit"></i></button>
                 <button class="delete-button"><i class="fas fa-trash"></i></button>
             `;
@@ -126,48 +136,6 @@ ipcRenderer.on('delete-vehicle-response', (event, response) => {
     }
 });
 
-// agregar filas
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const inputPlate = document.getElementById('inputPlate');
-    const btnBuscar = document.getElementById('btnBuscar');
-    const tableBody = document.querySelector('#vehicleTable tbody');
-
-    btnBuscar.addEventListener('click', async () => {
-        const plate = inputPlate.value.trim();
-        console.log('Matrícula ingresada:', plate);
-        if (!plate) {
-            alert('Por favor, ingrese una matrícula válida.');
-            return;
-        }
-        try {
-            // Enviar consulta al proceso principal
-            const datos = await ipcRenderer.invoke('buscar-patente', plate);
-            console.log('Datos recibidos:', datos);
-            if (datos) {
-                // Crear una nueva fila con los datos recibidos
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${datos.plate}</td>
-                    <td>${datos.brand}</td>
-                    <td>${datos.model}</td>
-                    <td>${datos.dateC}</td>
-                    <td>${datos.dateV}</td>
-                `;
-                // Agregar la nueva fila al cuerpo de la tabla
-                tableBody.appendChild(newRow);
-                // Limpiar el campo de entrada
-                inputPlate.value = '';
-            } else {
-                alert('No se encontraron datos para esta matrícula.');
-            }
-        } catch (error) {
-            console.error('Error al buscar la matrícula:', error);
-            alert('Hubo un error al buscar la matrícula.');
-        }
-    });
-});
 
 function cargarTablaDesdeBD() {
     ipcRenderer.send('get-vehicles');
@@ -178,12 +146,16 @@ ipcRenderer.on('get-vehicles-response', (event, response) => {
     if (response.success && response.vehicles.length > 0) {
         response.vehicles.forEach(vehicle => {
             const newRow = document.createElement('tr');
+            const dateCFormatted = formatDate(vehicle.dateC);
+            const dateVFormatted = formatDate(vehicle.dateV);
+            const dateCClass = isDateWithin30Days(vehicle.dateC) ? 'highlight' : '';
+            const dateVClass = isDateWithin30Days(vehicle.dateV) ? 'highlight' : '';
             newRow.innerHTML = `
                 <td>${vehicle.plate}</td>
                 <td>${vehicle.brand}</td>
                 <td>${vehicle.model}</td>
-                <td>${vehicle.dateC}</td>
-                <td>${vehicle.dateV}</td>
+                <td class="${dateCClass}">${dateCFormatted}</td>
+                <td class="${dateVClass}">${dateVFormatted}</td>
             `;
             tableBody.appendChild(newRow);
         });
@@ -205,16 +177,31 @@ document.getElementById('force-reload').addEventListener('click', () => {
     ipcRenderer.send('force-reload');
 });
 
-ipcMain.on('force-reload', () => {
-    if (mainWindow) {
-        mainWindow.minimize();  // Minimiza la ventana temporalmente
-        mainWindow.webContents.reloadIgnoringCache();
-
-        // Después de recargar, restauramos la ventana
-        mainWindow.webContents.once('did-finish-load', () => {
-            mainWindow.restore();
-            mainWindow.focus();  // Asegurarse de que la ventana recupere el foco
-        });
-    }
-});
 //------------------------------    FIN    ----------------------------------//
+
+
+// -----------------------------    INICIO    ----------------------------- //
+// funcionalidad para resetear el formato de fecha
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    if (!day) {
+        // Si solo hay año y mes, establece el día en 01
+        return `${month}-${year}`;
+    }
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', options);
+}
+// -----------------------------    FIN    ----------------------------- //
+
+// -----------------------------    INICIO    ----------------------------- //
+// funcion para marcar fechas
+function isDateWithin30Days(dateString) {
+    const date = new Date(dateString);
+    const today = new Date();
+    const diffTime = date - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 30 && diffDays >= 0;
+}
+// -----------------------------    FIN    ----------------------------- //
