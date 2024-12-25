@@ -107,7 +107,7 @@ table tr:hover {
 
 /* Highlight class for dates within 30 days */
 .highlight {
-    color: #d32f2f; /* Rojo oscuro para mayor contraste */
+    color: #ff0000; /* Rojo oscuro para mayor contraste */
     font-weight: bold;
 }
 .edit-button,

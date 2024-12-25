@@ -162,8 +162,8 @@ function formatDate(dateString) {
         // Si solo hay año y mes, establece el día en 01
         return `${month}-${year}`;
     }
+    const date = new Date(year, month - 1, day); // Usar Date.UTC para evitar problemas de zona horaria
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', options);
 }
 // -----------------------------    FIN    ----------------------------- //
@@ -173,9 +173,9 @@ function formatDate(dateString) {
 function isDateWithin30Days(dateString) {
     const date = new Date(dateString);
     const today = new Date();
-    const diffTime = date - today;
+    const diffTime = date.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 30 && diffDays >= 0;
+    return diffDays <= 30 || diffDays <= 0;
 }
 // -----------------------------    FIN    ----------------------------- //
 // -----------------------------    INICIO    ----------------------------- //
