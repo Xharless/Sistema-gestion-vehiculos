@@ -216,3 +216,80 @@ document.addEventListener('keydown', (event) => {
     }
 });
 // -----------------------------    FIN    ----------------------------- //
+// -----------------------------    INICIO    ----------------------------- //
+// funcionalidades para la tabla de conductores
+
+// Variables para el formulario de conductores
+const showConductorFormButton = document.getElementById('show-add-form-conductor');
+const conductorFormOverlay = document.getElementById('overlay-form-conductor');
+const conductorForm = document.getElementById('conductor-form');
+const closeConductorFormButton = document.getElementById('close-form-conductor');
+const conductorTableBody = document.querySelector('#conductorTable tbody');
+
+// Mostrar el formulario de conductores
+showConductorFormButton.addEventListener('click', () => {
+    conductorFormOverlay.style.display = 'flex';
+});
+
+// Cerrar el formulario de conductores
+closeConductorFormButton.addEventListener('click', () => {
+    conductorFormOverlay.style.display = 'none';
+});
+
+// Agregar un nuevo conductor a la tabla
+conductorForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Obtener los valores del formulario
+    const name = document.getElementById('name').value;
+    const lastname = document.getElementById('lastname').value;
+    const VLicencia = document.getElementById('VLicencia').value;
+    const clase = document.getElementById('clase').value;
+    const VCarnet = document.getElementById('VCarnet').value;
+
+    ipcRenderer.send('add-driver', { name, lastname, VLicencia, clase, VCarnet });
+    conductorFormOverlay.style.display = 'none';
+    e.target.reset();
+});
+
+ipcRenderer.on('update-drivers', () => {
+    fetchDrivers();
+});
+    
+async function fetchDrivers() {
+        try {
+            const rows = await ipcRenderer.invoke('fetch-drivers');
+            conductorTableBody.innerHTML = ''; // Limpiar el contenido de la tabla
+            rows.forEach(driver => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${driver.name}</td>
+                    <td>${driver.lastname}</td>
+                    <td>${driver.VLicencia}</td>
+                    <td>${driver.clase}</td>
+                    <td>${driver.VCarnet}</td>
+                    <td>
+                        <button class="edit-button-conductor"><i class="fas fa-edit"></i></button>
+                        <button class="delete-button-conductor"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                conductorTableBody.appendChild(row);
+            });
+        } catch (err) {
+            console.error('Error fetching drivers', err.message);
+        }
+    }
+
+    // Llamar a fetchDrivers al cargar la página para poblar la tabla inicialmente
+    fetchDrivers();
+
+
+
+
+
+//--------------------------------    FIN    --------------------------------//
+
+// -----------------------------    INICIO    ----------------------------- //
+
+
+// -----------------------------    FIN    ----------------------------- //

@@ -132,6 +132,47 @@ ipcMain.on('force-reload', () => {
     }
 });
 
+// ----------------------------------------------
+// manejo para datos de conductores
+ipcMain.handle('fetch-drivers', async () => {
+    return new Promise((resolve, reject) => {
+        db.all(`SELECT * FROM conductores`, [], (err, rows) => {
+            if (err) {
+                console.error('Error fetching drivers', err.message);
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+});
+
+
+// ----------------------------------------------
+// agregar conductores
+// Manejo de la inserción de un nuevo conductor
+ipcMain.on('add-driver', (event, driver) => {
+    const { name, lastname, VLicencia, clase, VCarnet } = driver;
+
+    // Verifica si los datos están llegando correctamente
+    console.log('Datos recibidos para insertar:', driver);
+
+    // Inserción en la base de datos
+    const query = `INSERT INTO conductores (name, lastname, VLicencia, clase, VCarnet) VALUES (?, ?, ?, ?, ?)`;
+    db.run(query, [name, lastname, VLicencia, clase, VCarnet], function(err) {
+        if (err) {
+            console.error('Error al insertar el conductor', err.message);
+            event.reply('driver-insertion-error', err.message);
+        } else {
+            console.log('Conductor insertado con éxito');
+            event.reply('driver-insertion-success');
+            // Después de insertar, actualiza la tabla de conductores
+            event.sender.send('update-drivers');
+        }
+    });
+});
+
+
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();

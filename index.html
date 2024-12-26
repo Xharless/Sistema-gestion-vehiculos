@@ -44,8 +44,7 @@
 
         <div class="table-container">
             <div class="buttons-container">
-                <button id="force-reload"><i class="fas fa-sync-alt"></i></button>
-                <button id="show-add-form"><i class="fas fa-plus"></i></button>
+                <button id="show-add-form-conductor"><i class="fas fa-plus"></i></button>
             </div>
             <h2>Documentos Conductores</h2>
             <table id="conductorTable" border="1">
@@ -78,7 +77,21 @@
                 <button type="button" id="close-form">Cerrar</button>
             </form>
         </div>
-    </div>         
+    </div>
+    <div id="overlay-form-conductor" class="overlay">
+        <div class="form-container">
+            <h2>Agregar Conductor</h2>
+            <form id="conductor-form">
+                <input type="text" id="name" placeholder="Nombre" required>
+                <input type="text" id="apellido" placeholder="Apellido" required>
+                <input type="date" id="VLicencia" placeholder="V. Licencia" required>
+                <input type="text" id="clase" placeholder="Clase" required>
+                <input type="date" id="VCarnet" placeholder="V. Carnet" required>
+                <button type="submit">Agregar Conductor</button>
+                <button type="button" id="close-form-conductor">Cerrar</button>
+            </form>
+        </div>
+    </div>             
 
     <h2 id="edit-header" style="display: none;"></h2>
     <form id="edit-form" class="edit-form" style="display: none;">
