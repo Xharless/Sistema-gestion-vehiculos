@@ -253,6 +253,14 @@ conductorForm.addEventListener('submit', (e) => {
     e.target.reset();
 });
 
+ipcRenderer.on('add-driver-response', (event, response) => {
+    if (response.success) {
+        alert('Conductor agregado correctamente');
+    } else {
+        alert('Error al agregar el conductor');
+    }
+});
+
 ipcRenderer.on('update-drivers', () => {
     fetchDrivers();
 });

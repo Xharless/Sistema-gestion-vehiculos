@@ -159,12 +159,11 @@ ipcMain.on('add-driver', (event, driver) => {
     const query = `INSERT INTO conductores (name, lastname, VLicencia, clase, VCarnet) VALUES (?, ?, ?, ?, ?)`;
     db.run(query, [name, lastname, VLicencia, clase, VCarnet], function(err) {
         if (err) {
-            event.reply('driver-insertion-error', err.message);
+            console.error('Error inserting driver', err.message);
+            event.reply('add-driver-response', { success: false });
         } else {
-            
-            event.reply('driver-insertion-success');
-            // Después de insertar, actualiza la tabla de conductores
-            event.sender.send('update-drivers');
+            event.reply('add-driver-response', { success: true });
+            mainWindow.webContents.send('update-drivers');
         }
     });
 });
