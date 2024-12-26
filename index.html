@@ -40,6 +40,14 @@
                 <tbody>
                 </tbody>
             </table>
+            <!--edicion de vehiculos-->
+            <h2 id="edit-header" style="display: none;"></h2>
+            <form id="edit-form" class="edit-form" style="display: none;">
+                <input type="hidden" id="edit-plate">
+                <input type="date" id="edit-dateC" placeholder="Nueva Fecha de vencimiento de la tarjeta de circulación" required>
+                <input type="month" id="edit-dateV" placeholder="Nueva Fecha de vencimiento de la revisión técnica" required>
+                <button type="submit">Editar Fechas</button>
+            </form>
         </div>
 
         <div class="table-container">
@@ -61,6 +69,14 @@
                 <tbody>
                 </tbody>
             </table>
+            <!--edicion de conductores-->
+            <h2 id="edit-header-conductores" style="display: none;"></h2>
+            <form id="edit-form-conductores" class="edit-form" style="display: none;">
+                <input type="hidden" id="edit-id">
+                <input type="date" id="edit-VLicencia" placeholder="Nueva fecha V. Licencia" required>
+                <input type="date" id="edit-VCarnet" placeholder="Nueva fecha V. Cartener" required>
+                <button type="submit">Editar Fechas</button>
+            </form>
         </div>
     </div>
 
@@ -93,21 +109,8 @@
         </div>
     </div>             
 
-    <h2 id="edit-header" style="display: none;"></h2>
-    <form id="edit-form" class="edit-form" style="display: none;">
-        <input type="hidden" id="edit-plate">
-        <input type="date" id="edit-dateC" placeholder="Nueva Fecha de vencimiento de la tarjeta de circulación" required>
-        <input type="month" id="edit-dateV" placeholder="Nueva Fecha de vencimiento de la revisión técnica" required>
-        <button type="submit">Editar Fechas</button>
-    </form>
+    
 
-    <h2 id="edit-header-conductores" style="display: none;"></h2>
-    <form id="edit-form-conductores" class="edit-form" style="display: none;">
-        <input type="hidden" id="edit-id">
-        <input type="date" id="edit-VLicencia" placeholder="Nueva fecha V. Licencia" required>
-        <input type="date" id="edit-VCarnet" placeholder="Nueva fecha V. Cartener" required>
-        <button type="submit">Editar Fechas</button>
-    </form>
 
     
     <script src="render.js"></script>
