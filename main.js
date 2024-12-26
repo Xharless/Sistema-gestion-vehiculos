@@ -7,7 +7,7 @@ const sqlite3 = require('sqlite3').verbose();
 let mainWindow;
 let db;
 
-app.on('ready', () => {
+function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -18,18 +18,35 @@ app.on('ready', () => {
         },
         icon: path.join(__dirname, 'IMG', 'expediente.ico')
     });
-    
+
     mainWindow.loadFile('index.html');
+
+    // Abrir la ventana en modo de pantalla completa
     mainWindow.maximize();
+
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+}
 
-    db = new sqlite3.Database(path.join(__dirname, 'database.sqlite'), (err) => {
+app.on('ready', () => {
+    createWindow();
+
+    // Determinar la ruta de la base de datos
+    const dbPath = path.join(app.getPath('userData'), 'database.sqlite');
+
+    // Copiar la base de datos al directorio de datos del usuario si no existe
+    const fs = require('fs');
+    if (!fs.existsSync(dbPath)) {
+        fs.copyFileSync(path.join(__dirname, 'database.sqlite'), dbPath);
+    }
+
+    // Abrir la base de datos
+    db = new sqlite3.Database(dbPath, (err) => {
         if (err) {
             console.error('Error opening database', err.message);
         } else {
-            console.log('Connected to the database.');
+            console.log('Database opened successfully');
         }
     });
 });

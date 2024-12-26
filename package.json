@@ -1,0 +1,35 @@
+{
+  "name": "SGV",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "win": {
+      "target": "nsis",
+      "icon": "IMG/expediente.ico"
+    },
+    "files": [
+      "main.js",
+      "render.js",
+      "index.html",
+      "styles.css",
+      "database.sqlite",
+      "node_modules/**/*",
+      "IMG/**/*"
+    ],
+    "directories": {
+      "buildResources": "build"
+    }
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "electron-packager": "^17.1.2"
+  }
+}
