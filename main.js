@@ -172,7 +172,45 @@ ipcMain.on('add-driver', (event, driver) => {
     });
 });
 
+// ----------------------------------------------
+// editar conductores
+// Manejo de la actualización de fechas de un conductor
+ipcMain.on('update-driver-dates', (event, data) => {
+    const { id, VLicencia, VCarnet } = data;
 
+    // Verificar que los datos están llegando correctamente
+    console.log('Datos para actualizar fechas del conductor:', data);
+
+    // Actualizar las fechas en la base de datos
+    const query = `
+        UPDATE conductores
+        SET VLicencia = ?, VCarnet = ?
+        WHERE id = ?
+    `;
+    db.run(query, [VLicencia, VCarnet, id], function(err) {
+        if (err) {
+            console.error('Error al actualizar las fechas del conductor', err.message);
+            event.reply('driver-update-error', err.message);
+        } else {
+            console.log('Fechas del conductor actualizadas con éxito');
+            event.reply('driver-update-success');
+            // Actualizar la vista de conductores
+            event.sender.send('update-drivers');
+        }
+    });
+});
+ipcMain.on('delete-driver', (event, { id }) => {
+    db.run(`DELETE FROM conductores WHERE id = ?`, [id], function (err) {
+        if (err) {
+            console.error('Error deleting driver', err.message);
+            event.reply('delete-driver-response', { success: false });
+        } else {
+            event.reply('delete-driver-response', { success: true });
+            mainWindow.webContents.send('update-drivers');
+        }
+    });
+});
+// ----------------------------------------------   
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();

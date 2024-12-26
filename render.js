@@ -226,6 +226,7 @@ const conductorForm = document.getElementById('conductor-form');
 const closeConductorFormButton = document.getElementById('close-form-conductor');
 const conductorTableBody = document.querySelector('#conductorTable tbody');
 
+
 // Mostrar el formulario de conductores
 showConductorFormButton.addEventListener('click', () => {
     conductorFormOverlay.style.display = 'flex';
@@ -269,27 +270,57 @@ async function fetchDrivers() {
                     <td>${driver.clase}</td>
                     <td>${driver.VCarnet}</td>
                     <td>
-                        <button class="edit-button-conductor"><i class="fas fa-edit"></i></button>
-                        <button class="delete-button-conductor"><i class="fas fa-trash"></i></button>
+                        <button class="edit-button" data-id="${driver.id}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-button" data-id="${driver.id}"><i class="fas fa-trash"></i></button>
                     </td>
                 `;
                 conductorTableBody.appendChild(row);
+            });
+            document.querySelectorAll('.edit-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.closest('button').dataset.id;
+                    const driver = rows.find(driver => driver.id == id);
+                    showEditForm(driver);
+                });
+            });
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.closest('button').dataset.id;
+                    ipcRenderer.send('delete-driver', { id });
+                });
             });
         } catch (err) {
             console.error('Error fetching drivers', err.message);
         }
     }
-
+    function showEditForm(driver) {
+        const editForm = document.getElementById('edit-form-conductores');
+        const editHeader = document.getElementById('edit-header-conductores');
+        editHeader.textContent = `Editar Fechas para ${driver.name} ${driver.lastname}`;
+        document.getElementById('edit-id').value = driver.id;
+        document.getElementById('edit-VLicencia').value = driver.VLicencia;
+        document.getElementById('edit-VCarnet').value = driver.VCarnet;
+        editForm.style.display = 'block';
+    }
+    const editFormC = document.getElementById('edit-form-conductores');
+    editFormC.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = document.getElementById('edit-id').value;
+        const VLicencia = document.getElementById('edit-VLicencia').value;
+        const VCarnet = document.getElementById('edit-VCarnet').value;
+        ipcRenderer.send('update-driver-dates', { id, VLicencia, VCarnet });
+        editFormC.style.display = 'none';
+    });
     // Llamar a fetchDrivers al cargar la página para poblar la tabla inicialmente
     fetchDrivers();
 
-
-
-
-
 //--------------------------------    FIN    --------------------------------//
 
+
 // -----------------------------    INICIO    ----------------------------- //
+// edicion de fechas
+
+
 
 
 // -----------------------------    FIN    ----------------------------- //
