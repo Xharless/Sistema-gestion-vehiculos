@@ -20,6 +20,20 @@ const db = new sqlite3.Database(dbPath, (err) => {
                 console.log('Tabla creada correctamente');
             }
         });
+        db.run(`CREATE TABLE IF NOT EXISTS conductores (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            lastname TEXT NOT NULL,
+            VLicencia TEXT NOT NULL,
+            clase TEXT NOT NULL,
+            VCarnet TEXT NOT NULL
+        )`, (err) => {
+            if(err){
+                console.log('Error al crear la tabla', err.message);
+            } else {
+                console.log('Tabla creada correctamente');
+            }
+        });
     }
 });
 
