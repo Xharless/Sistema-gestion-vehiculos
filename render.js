@@ -308,6 +308,11 @@ async function fetchDrivers() {
         document.getElementById('edit-VLicencia').value = driver.VLicencia;
         document.getElementById('edit-VCarnet').value = driver.VCarnet;
         editForm.style.display = 'block';
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                editForm.style.display = 'none';
+            }
+        });
     }
     const editFormC = document.getElementById('edit-form-conductores');
     editFormC.addEventListener('submit', (e) => {
@@ -318,6 +323,13 @@ async function fetchDrivers() {
         ipcRenderer.send('update-driver-dates', { id, VLicencia, VCarnet });
         editFormC.style.display = 'none';
     });
+
+
+    //mensaje de confirmacion de las fechas
+    ipcRenderer.on('driver-update-success', () => {
+        alert('Fechas del conductor actualizadas correctamente');
+    });
+
     // Llamar a fetchDrivers al cargar la página para poblar la tabla inicialmente
     fetchDrivers();
 

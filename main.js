@@ -154,17 +154,14 @@ ipcMain.handle('fetch-drivers', async () => {
 ipcMain.on('add-driver', (event, driver) => {
     const { name, lastname, VLicencia, clase, VCarnet } = driver;
 
-    // Verifica si los datos están llegando correctamente
-    console.log('Datos recibidos para insertar:', driver);
 
     // Inserción en la base de datos
     const query = `INSERT INTO conductores (name, lastname, VLicencia, clase, VCarnet) VALUES (?, ?, ?, ?, ?)`;
     db.run(query, [name, lastname, VLicencia, clase, VCarnet], function(err) {
         if (err) {
-            console.error('Error al insertar el conductor', err.message);
             event.reply('driver-insertion-error', err.message);
         } else {
-            console.log('Conductor insertado con éxito');
+            
             event.reply('driver-insertion-success');
             // Después de insertar, actualiza la tabla de conductores
             event.sender.send('update-drivers');
@@ -178,9 +175,6 @@ ipcMain.on('add-driver', (event, driver) => {
 ipcMain.on('update-driver-dates', (event, data) => {
     const { id, VLicencia, VCarnet } = data;
 
-    // Verificar que los datos están llegando correctamente
-    console.log('Datos para actualizar fechas del conductor:', data);
-
     // Actualizar las fechas en la base de datos
     const query = `
         UPDATE conductores
@@ -189,10 +183,8 @@ ipcMain.on('update-driver-dates', (event, data) => {
     `;
     db.run(query, [VLicencia, VCarnet, id], function(err) {
         if (err) {
-            console.error('Error al actualizar las fechas del conductor', err.message);
             event.reply('driver-update-error', err.message);
         } else {
-            console.log('Fechas del conductor actualizadas con éxito');
             event.reply('driver-update-success');
             // Actualizar la vista de conductores
             event.sender.send('update-drivers');
