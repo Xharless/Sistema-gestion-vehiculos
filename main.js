@@ -16,11 +16,11 @@ app.on('ready', () => {
             contextIsolation: false,
             webSecurity: false
         },
-        icon: path.join(__dirname, 'IMG', 'expediente.png')
+        icon: path.join(__dirname, 'IMG', 'expediente.ico')
     });
     
     mainWindow.loadFile('index.html');
-
+    mainWindow.maximize();
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
