@@ -304,7 +304,10 @@ async function fetchDrivers() {
                 document.querySelectorAll('.delete-button').forEach(button => {
                     button.addEventListener('click', (e) => {
                         const id = e.target.closest('button').dataset.id;
-                        ipcRenderer.send('delete-driver', { id });
+                        const driver = rows.find(driver => driver.id == id);
+                        if(confirm(`¿Estás seguro de que deseas eliminar a ${driver.name} ${driver.lastname}?`)){
+                            ipcRenderer.send('delete-driver', { id });
+                        }
                     });
                 });
             }
@@ -342,6 +345,13 @@ async function fetchDrivers() {
         alert('Fechas del conductor actualizadas correctamente');
     });
 
+    ipcRenderer.on('delete-driver-response', (event, response) => {
+        if (response.success) {
+            alert('Conductor eliminado correctamente');
+        } else {
+            alert('Error al eliminar el conductor');
+        } 
+    });
     // Llamar a fetchDrivers al cargar la página para poblar la tabla inicialmente
     fetchDrivers();
 
