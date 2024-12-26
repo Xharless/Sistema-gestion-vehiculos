@@ -74,11 +74,68 @@ form button {
     background-color: #f9f9f9;
 }
 
-
+.styled-table {
+    width: 100%; /* Ajusta el ancho de la tabla */
+    border-collapse: collapse;
+    margin: 25px auto; /* Centra la tabla horizontalmente */
+    font-size: 0.9em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-width: 300px; /* Ajusta el ancho mínimo de la tabla */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
 form button:hover {
     background-color: #0056b3;
 }
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
 
+.styled-table th,
+.styled-table td {
+    padding: 8px 10px; /* Ajusta el padding de las celdas */
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-container button {
+    background-color: #009879;
+    color: white;
+    border: none;
+    padding: 8px 12px; /* Ajusta el padding de los botones */
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.button-container button:hover {
+    background-color: #007f63;
+}
+
+.button-container button i {
+    margin-right: 5px;
+}
 /* Table styles */
 table {
     width: 80%;
