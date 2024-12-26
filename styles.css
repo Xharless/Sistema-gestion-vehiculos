@@ -10,6 +10,9 @@ body {
 h2 {
     color: #403939; /* Texto blanco para resaltar sobre el fondo */
 }
+.narrow-column {
+    width: 100px; /* Ajusta el ancho de las columnas específicas */
+}
 
 /* Flex container for two columns */
 .container {

@@ -133,7 +133,7 @@ ipcRenderer.on('get-vehicles-response', (event, response) => {
             });
         });
     } else {
-        tableBody.innerHTML = '<tr><td colspan="5">No hay datos disponibles</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="5">No hay vehiculos registrados</td></tr>';
     }
 });
 ipcRenderer.on('update-vehicles', () => {
@@ -261,34 +261,41 @@ async function fetchDrivers() {
         try {
             const rows = await ipcRenderer.invoke('fetch-drivers');
             conductorTableBody.innerHTML = ''; // Limpiar el contenido de la tabla
-            rows.forEach(driver => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${driver.name}</td>
-                    <td>${driver.lastname}</td>
-                    <td>${driver.VLicencia}</td>
-                    <td>${driver.clase}</td>
-                    <td>${driver.VCarnet}</td>
-                    <td>
-                        <button class="edit-button" data-id="${driver.id}"><i class="fas fa-edit"></i></button>
-                        <button class="delete-button" data-id="${driver.id}"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                conductorTableBody.appendChild(row);
-            });
-            document.querySelectorAll('.edit-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const id = e.target.closest('button').dataset.id;
-                    const driver = rows.find(driver => driver.id == id);
-                    showEditForm(driver);
+
+            if (rows.length === 0){
+                const messageRow = document.createElement('tr');
+                messageRow.innerHTML = `<td colspan="5";">No hay conductores registrados</td>`;
+                conductorTableBody.appendChild(messageRow);
+            } else {
+                rows.forEach(driver => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${driver.name}</td>
+                        <td>${driver.lastname}</td>
+                        <td>${driver.VLicencia}</td>
+                        <td>${driver.clase}</td>
+                        <td>${driver.VCarnet}</td>
+                        <td>
+                            <button class="edit-button" data-id="${driver.id}"><i class="fas fa-edit"></i></button>
+                            <button class="delete-button" data-id="${driver.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    conductorTableBody.appendChild(row);
                 });
-            });
-            document.querySelectorAll('.delete-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const id = e.target.closest('button').dataset.id;
-                    ipcRenderer.send('delete-driver', { id });
+                document.querySelectorAll('.edit-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const id = e.target.closest('button').dataset.id;
+                        const driver = rows.find(driver => driver.id == id);
+                        showEditForm(driver);
+                    });
                 });
-            });
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const id = e.target.closest('button').dataset.id;
+                        ipcRenderer.send('delete-driver', { id });
+                    });
+                });
+            }
         } catch (err) {
             console.error('Error fetching drivers', err.message);
         }
@@ -316,11 +323,3 @@ async function fetchDrivers() {
 
 //--------------------------------    FIN    --------------------------------//
 
-
-// -----------------------------    INICIO    ----------------------------- //
-// edicion de fechas
-
-
-
-
-// -----------------------------    FIN    ----------------------------- //
