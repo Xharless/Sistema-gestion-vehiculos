@@ -269,12 +269,16 @@ async function fetchDrivers() {
             } else {
                 rows.forEach(driver => {
                     const row = document.createElement('tr');
+                    const VLincenciaFormatted = formatDate(driver.VLicencia);
+                    const VCarnetFormatted = formatDate(driver.VCarnet);
+                    const VLicenciaClass = isDateWithin30Days(driver.VLicencia) ? 'highlight' : '';
+                    const VCarnetClass = isDateWithin30Days(driver.VCarnet) ? 'highlight' : '';
                     row.innerHTML = `
                         <td>${driver.name}</td>
                         <td>${driver.lastname}</td>
-                        <td>${driver.VLicencia}</td>
+                        <td class="${VLicenciaClass}">${VLincenciaFormatted}</td>
                         <td>${driver.clase}</td>
-                        <td>${driver.VCarnet}</td>
+                        <td class="${VCarnetClass}">${VCarnetFormatted}</td>
                         <td>
                             <button class="edit-button" data-id="${driver.id}"><i class="fas fa-edit"></i></button>
                             <button class="delete-button" data-id="${driver.id}"><i class="fas fa-trash"></i></button>
